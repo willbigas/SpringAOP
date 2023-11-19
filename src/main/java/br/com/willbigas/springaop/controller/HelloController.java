@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class HelloController {
 
-	private final OutraClasse outraClasse;
+	private final ClasseQualquer classeQualquer;
 
 	@GetMapping
-	public ResponseEntity<String> hello() {
-		outraClasse.soma(2 , 5);
-		return ResponseEntity.ok(this.outraClasse.retornarAlgoBaseadoNoParametro("William"));
+	public ResponseEntity<String> hello() throws InterruptedException {
+		classeQualquer.soma(2 , 5);
+		classeQualquer.calculaLista(1);
+		return ResponseEntity.ok(this.classeQualquer.retornarAlgoBaseadoNoParametro("William"));
 	}
 
 
