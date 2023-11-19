@@ -13,19 +13,30 @@ import org.springframework.stereotype.Component;
 public class ExecutionTimeLoggerAspect {
 
 
-	@Around("@annotation(ExecutionTimeLogger)")
-	public Object executionTimeLogger(ProceedingJoinPoint joinPoint) throws Throwable {
+	@Around("@annotation(executionTimeLogger)")
+	public Object executionTimeLogger(ProceedingJoinPoint joinPoint, ExecutionTimeLogger executionTimeLogger) throws Throwable {
 
 		try {
-			long startTime = System.currentTimeMillis();
+			TimeUnit timeUnit = executionTimeLogger.value();
+			long startTime = getTime(timeUnit);
 			Object proceed = joinPoint.proceed();
-			long executionTime = (System.currentTimeMillis() - startTime);
-			log.info("{} metodo foi executado em {} millisegundos", joinPoint.getSignature().toShortString(), executionTime);
+			long executionTime = (getTime(timeUnit) - startTime);
+			log.info("{} metodo foi executado em {} {} ", joinPoint.getSignature().toShortString(), executionTime, timeUnit.getTexto());
 			return proceed;
 		} catch (Throwable e) {
 			log.error("Houve um erro ao tentar calcular o tempo de execução para o método {}", joinPoint.getSignature().toShortString(), e);
 			return null;
 		}
+	}
+
+	private long getTime(TimeUnit timeUnit) {
+		if (TimeUnit.NANOSECONDS.equals(timeUnit)) {
+			return System.nanoTime();
+		}
+		if (TimeUnit.SECONDS.equals(timeUnit)) {
+			return System.currentTimeMillis() / 1000;
+		}
+		return System.currentTimeMillis();
 	}
 
 //	@Before("@annotation(Log)")

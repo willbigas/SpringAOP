@@ -15,6 +15,7 @@ public class HelloController {
 	public ResponseEntity<String> hello() throws InterruptedException {
 		classeQualquer.soma(2 , 5);
 		classeQualquer.calculaLista(1);
+		classeQualquer.calculaListaMenor(1);
 		return ResponseEntity.ok(this.classeQualquer.retornarAlgoBaseadoNoParametro("William"));
 	}
 
